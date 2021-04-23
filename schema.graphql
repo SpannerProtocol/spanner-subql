@@ -1,0 +1,17 @@
+type Block @entity {
+  id: ID! #id is a required field
+  number: BigInt!
+  parentHash: String!
+  specVersion: Int!
+}
+
+
+type BalanceTransfer @entity {
+  id: ID! #id is a required field
+
+  from: String!
+  to: String!
+  amount: BigInt!
+
+  block: Block!
+}
