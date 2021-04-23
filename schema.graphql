@@ -3,15 +3,34 @@ type Block @entity {
   number: BigInt!
   parentHash: String!
   specVersion: Int!
+  timestamp: Date!
 }
 
-
-type BalanceTransfer @entity {
-  id: ID! #id is a required field
-
-  from: String!
-  to: String!
-  amount: BigInt!
-
+type Event @entity {
+  id: ID!
+  index: Int!
+  section: String!
+  method: String!
+  data: String!
   block: Block!
+  extrinsic: Extrinsic
+}
+
+type Extrinsic @entity {
+  id: ID!
+
+  method: String
+  section: String
+  args: String
+  signer: String
+  nonce: BigInt
+  timestamp: Date
+  signature: String
+  tip: BigInt
+  isSigned: Boolean
+  isSuccess: Boolean
+
+  block: Block
+
+  events: [Event] @derivedFrom(field: "extrinsic")
 }
