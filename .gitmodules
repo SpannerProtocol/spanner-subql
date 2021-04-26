@@ -1,0 +1,3 @@
+[submodule "src/spanner-interfaces"]
+	path = src/spanner-interfaces
+	url = https://github.com/SpannerProtocol/spanner-interfaces
