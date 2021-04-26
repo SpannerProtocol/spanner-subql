@@ -8,8 +8,13 @@
     "resolveJsonModule": true,
     "module": "commonjs",
     "outDir": "dist",
-    "rootDir": "src",
-    "target": "es2017"
+    "target": "es2017",
+    "baseUrl": "src",
+    "skipLibCheck": true,
+    "paths": {
+      "@polkadot/api/augment": ["spanner-interfaces/augment-api.ts"],
+      "@polkadot/types/augment": ["spanner-interfaces/augment-types.ts"]
+    }
   },
   "include": [
     "src/**/*",

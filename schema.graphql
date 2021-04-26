@@ -1,9 +1,11 @@
 type Block @entity {
   id: ID! #id is a required field
-  number: BigInt!
-  parentHash: String!
-  specVersion: Int!
-  timestamp: Date!
+  number: BigInt
+  timestamp: Date
+  parentHash: String
+  specVersion: Int
+  extrinsics: [Extrinsic] @derivedFrom(field: "block")
+  events: [Event] @derivedFrom(field: "block")
 }
 
 type Event @entity {
@@ -18,19 +20,44 @@ type Event @entity {
 
 type Extrinsic @entity {
   id: ID!
-
   method: String
   section: String
   args: String
-  signer: String
+  signer: Account
   nonce: BigInt
   timestamp: Date
   signature: String
   tip: BigInt
   isSigned: Boolean
   isSuccess: Boolean
-
   block: Block
-
   events: [Event] @derivedFrom(field: "extrinsic")
+}
+
+type Account @entity {
+  id: ID!
+  extrinsics: [Extrinsic] @derivedFrom(field: "signer")
+  dpos: [Dpo]
+  travelCabins: [TravelCabin]
+}
+
+type Transfer @entity {
+  id: ID!
+  from: Account
+  to: Account
+  token: String
+  amount: BigInt
+  extrinsic: Extrinsic
+  timestamp: Date
+  isSuccess: Boolean
+}
+
+type Dpo @entity {
+  id: ID!
+  targeting: [Dpo]
+}
+
+type TravelCabin @entity {
+  id: ID!
+  targeting: [Dpo]
 }

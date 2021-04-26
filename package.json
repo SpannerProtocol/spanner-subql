@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -b",
+    "build:clean": "yarn run codegen && yarn run build && rm -rf .data",
     "build:types": "yarn generate:defs && yarn generate:meta",
     "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package 'spanner-interfaces' --input ./src/spanner-interfaces",
     "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package 'spanner-interfaces' --endpoint ./src/spanner-interfaces/metadata.json --output ./src/spanner-interfaces",

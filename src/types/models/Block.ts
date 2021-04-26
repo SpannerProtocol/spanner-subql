@@ -14,13 +14,13 @@ export class Block implements Entity {
 
     public id: string;
 
-    public number: bigint;
+    public number?: bigint;
 
-    public parentHash: string;
+    public timestamp?: Date;
 
-    public specVersion: number;
+    public parentHash?: string;
 
-    public timestamp: Date;
+    public specVersion?: number;
 
 
     async save(): Promise<void>{

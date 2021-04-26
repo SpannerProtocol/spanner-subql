@@ -18,12 +18,10 @@ export class BlockHandler {
 
     public async save () {
         const block = new Block(this.block.block.hash.toString())
-
         block.number = this.block.block.header.number.toBigInt()
         block.specVersion = this.block.specVersion
         block.parentHash = this.block.block.header.parentHash.toString();
         block.timestamp = getBlockTimestamp(this.block.block);
-
         await block.save()
     }
 }
