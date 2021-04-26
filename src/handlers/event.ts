@@ -27,5 +27,19 @@ export class EventHandler {
         event.blockId = blockHash;
         event.extrinsicId = extrinsicHash;
         await event.save()
+
+        //todo: update accounts
+        if(event.section == 'bulletTrain'){
+            if(event.method == 'CreateDpo'){
+
+            }else if(event.method == 'DpoTargetPurchased'){
+
+            }
+        }
+
+        //todo: update price
+        if(event.section == 'dex' && event.method == 'Swap'){
+
+        }
     }
 }

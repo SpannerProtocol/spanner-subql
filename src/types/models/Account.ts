@@ -14,9 +14,9 @@ export class Account implements Entity {
 
     public id: string;
 
-    public dposId?: string;
+    public travelCabins?: bigint;
 
-    public travelCabinsId?: string;
+    public dpos?: bigint;
 
 
     async save(): Promise<void>{

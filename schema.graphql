@@ -37,8 +37,10 @@ type Extrinsic @entity {
 type Account @entity {
   id: ID!
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
-  dpos: [Dpo]
-  travelCabins: [TravelCabin]
+  transferIn: [Transfer] @derivedFrom(field: "to")
+  transferOut: [Transfer] @derivedFrom(field: "from")
+  travelCabins: [BigInt]
+  dpos: [BigInt]
 }
 
 type Transfer @entity {
@@ -52,12 +54,13 @@ type Transfer @entity {
   isSuccess: Boolean
 }
 
-type Dpo @entity {
+type Price @entity {
   id: ID!
-  targeting: [Dpo]
-}
-
-type TravelCabin @entity {
-  id: ID!
-  targeting: [Dpo]
+  blkNumber: BigInt
+  timestamp: Date
+  token1: String
+  tokenAmount1: BigInt
+  token2: String
+  tokenAmount2: BigInt
+  price: String
 }
