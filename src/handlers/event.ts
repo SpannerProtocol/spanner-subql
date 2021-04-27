@@ -88,7 +88,7 @@ export class EventHandler {
             let t_amount: string;
 
             if(event.section == 'balances'){
-                const token = 'BOLT';
+                t_tokenId = 'BOLT';
 
                 const from = api.createType('AccountId', data[0]);
                 t_from = from.toString();
