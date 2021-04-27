@@ -1,5 +1,5 @@
 import { SubstrateBlock } from '@subql/types'
-import { getBlockTimestamp } from '../helpers/block'
+import { getBlockTimestamp } from './utility'
 import { Block } from '../types/models/Block'
 
 export class BlockHandler {

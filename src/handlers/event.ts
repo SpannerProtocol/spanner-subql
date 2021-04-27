@@ -3,7 +3,7 @@ import { Event } from '../types/models/Event'
 import { BlockHandler } from './block'
 import { ExtrinsicHandler } from "./extrinsic";
 import { AccountHandler } from "./account";
-import { bnToUnit } from "../helpers/utility";
+import { bnToUnit } from "./utility";
 import { Swap } from "../types/models/Swap";
 import { Transfer } from "../types/models/Transfer";
 
