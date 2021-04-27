@@ -33,11 +33,28 @@ export class EventHandler {
         event.extrinsicId = extrinsicHash;
         await event.save()
 
-        //todo: update accounts
         if(event.section == 'bulletTrain'){
             if(event.method == 'CreateDpo'){
-
+                const acc = api.createType('AccountId', data[0]);
+                const dpo_id = api.createType('DpoIndex', data[1]);
+                await AccountHandler.updateAccountDpo(acc.toString(), dpo_id.toString());
             }else if(event.method == 'DpoTargetPurchased'){
+                const buyer = api.createType('Buyer', data[1]);
+                if(buyer.isPassenger){
+                    const acc = api.createType('AccountId', data[0]);
+                    const dpo_id = api.createType('DpoIndex', data[2]);
+                    await AccountHandler.updateAccountDpo(acc.toString(), dpo_id.toString())
+                }
+            }else if(event.method == 'TravelCabinTargetPurchased'){
+                const buyer = api.createType('Buyer', data[1]);
+                if(buyer.isPassenger){
+                    const acc = api.createType('AccountId', data[0]);
+                    const tc_id = api.createType('TravelCabinIndex', data[2]);
+                    const tc_inv_idx = api.createType('TravelCabinInventoryIndex', data[3]);
+                    await AccountHandler.updateAccountTravelCabin(acc.toString(), `${tc_id}-${tc_inv_idx}`)
+                }
+            }
+        }
 
         if(event.section == 'dex' && event.method == 'Swap'){
             const chain_decimal = api.registry.chainDecimals[0];
