@@ -14,6 +14,8 @@ export class Transfer implements Entity {
 
     public id: string;
 
+    public timestamp?: Date;
+
     public fromId?: string;
 
     public toId?: string;
@@ -21,12 +23,6 @@ export class Transfer implements Entity {
     public token?: string;
 
     public amount?: string;
-
-    public extrinsicId?: string;
-
-    public timestamp?: Date;
-
-    public isSuccess?: boolean;
 
 
     async save(): Promise<void>{

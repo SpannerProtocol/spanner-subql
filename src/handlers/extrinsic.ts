@@ -3,8 +3,6 @@ import { checkIfExtrinsicExecuteSuccess } from '../helpers/extrinsic'
 import { Extrinsic } from '../types/models/Extrinsic'
 import { BlockHandler } from './block'
 import { AccountHandler } from "./account";
-import { Transfer } from "../types/models/Transfer";
-import { CurrencyIdOf } from "../spanner-interfaces";
 
 export class ExtrinsicHandler {
     private readonly extrinsic: SubstrateExtrinsic
@@ -42,46 +40,5 @@ export class ExtrinsicHandler {
         record.isSuccess = checkIfExtrinsicExecuteSuccess(this.extrinsic);
         record.blockId = blockHash;
         await record.save()
-
-        //handle transfer
-        if (record.method == 'transfer'){
-            const transfer = new Transfer(record.id);
-            let t_to: string;
-            let t_tokenId: string;
-            let t_amount: string;
-            if(record.section == 'currencies'){
-                //parse destination
-                const dest = api.createType('LookupSource', args[0]);
-                t_to = dest.toString();
-                //parse currency
-                const token: CurrencyIdOf = api.createType('CurrencyIdOf', args[1]);
-                if(token.isToken){
-                    t_tokenId = token.asToken.toString();
-                }else if(token.isDexShare){
-                    t_tokenId = `${token.asDexShare[0]}-${token.asDexShare[1]}`;
-                }
-                //parse amount
-                const amount = api.createType('Compact<BalanceOf>', args[2]);
-                t_amount = amount.toString();
-            }else if(record.section == 'balances'){
-                //parse destination
-                const dest = api.createType('LookupSource', args[0]);
-                t_to = dest.toString();
-                //parse amount
-                const amount = api.createType('Compact<BalanceOf>', args[1]);
-                t_amount = amount.toString();
-                //native currency transfer
-                t_tokenId = 'BOLT';
-            }
-            await AccountHandler.ensureAccount(t_to);
-            transfer.toId = t_to;
-            transfer.fromId = record.signerId;
-            transfer.token = t_tokenId;
-            transfer.amount = t_amount;
-            transfer.extrinsicId = record.id;
-            transfer.timestamp = record.timestamp;
-            transfer.isSuccess = record.isSuccess;
-            await transfer.save();
-        }
     }
 }

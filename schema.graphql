@@ -45,13 +45,11 @@ type Account @entity {
 
 type Transfer @entity {
   id: ID!
+  timestamp: Date
   from: Account
   to: Account
   token: String
   amount: String
-  extrinsic: Extrinsic
-  timestamp: Date
-  isSuccess: Boolean
 }
 
 type Swap @entity {

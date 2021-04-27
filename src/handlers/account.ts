@@ -14,9 +14,12 @@ export class AccountHandler {
     }
 
     static async updateAccountDpo(id: string, dpo_id: string){
-        const account = await this.getAccountById(id)
+        const account = await this.getAccountById(id);
         if(account.dpos){
-            account.dpos = account.dpos.concat(',', dpo_id)
+            const dpos = account.dpos.split(',');
+            if (!dpos.includes(dpo_id)){
+                account.dpos = account.dpos.concat(',', dpo_id);
+            }
         }else{
             account.dpos = dpo_id;
         }
@@ -24,9 +27,12 @@ export class AccountHandler {
     }
 
     static async updateAccountTravelCabin(id: string, cabin_id: string){
-        const account = await this.getAccountById(id)
+        const account = await this.getAccountById(id);
         if(account.travelCabins){
-            account.travelCabins = account.travelCabins.concat(',', cabin_id)
+            const travelCabins = account.travelCabins.split(',');
+            if (!travelCabins.includes(cabin_id)) {
+                account.travelCabins = account.travelCabins.concat(',', cabin_id)
+            }
         }else{
             account.travelCabins = cabin_id;
         }

@@ -4,7 +4,8 @@ import { BlockHandler } from './block'
 import { ExtrinsicHandler } from "./extrinsic";
 import { AccountHandler } from "./account";
 import { bnToUnit } from "../helpers/utility";
-import {Swap} from "../types/models/Swap";
+import { Swap } from "../types/models/Swap";
+import { Transfer } from "../types/models/Transfer";
 
 export class EventHandler {
     private readonly event: SubstrateEvent
@@ -33,6 +34,7 @@ export class EventHandler {
         event.extrinsicId = extrinsicHash;
         await event.save()
 
+        //handle account bulletTrain
         if(event.section == 'bulletTrain'){
             if(event.method == 'CreateDpo'){
                 const acc = api.createType('AccountId', data[0]);
@@ -56,6 +58,7 @@ export class EventHandler {
             }
         }
 
+        //handle swap price
         if(event.section == 'dex' && event.method == 'Swap'){
             const chain_decimal = api.registry.chainDecimals[0];
             const path = api.createType('Vec<CurrencyId>', data[1]);
@@ -75,6 +78,55 @@ export class EventHandler {
             swap.tokenAmount1 = amount1.toString();
             swap.tokenAmount2 = amount2.toString();
             await swap.save();
+        }
+
+        //handle transfer
+        if(event.method == 'Transfer' || event.method == 'Transferred'){
+            let t_from: string;
+            let t_to: string;
+            let t_tokenId: string;
+            let t_amount: string;
+
+            if(event.section == 'balances'){
+                const token = 'BOLT';
+
+                const from = api.createType('AccountId', data[0]);
+                t_from = from.toString();
+
+                const to = api.createType('AccountId', data[1]);
+                t_to = to.toString();
+
+                const amount = api.createType('Balance', data[2]);
+                t_amount = amount.toString();
+            }else if(event.section == 'currencies'){
+                const token = api.createType('CurrencyIdOf', data[0]);
+                if(token.isToken && token.asToken.isBolt){
+                    //event will be captured by balances.Transfer
+                    return;
+                }else if(token.isToken){
+                    t_tokenId = token.asToken.toString();
+                }else if(token.isDexShare){
+                    t_tokenId = `${token.asDexShare[0]}-${token.asDexShare[1]}`;
+                }
+
+                const from = api.createType('AccountId', data[1]);
+                t_from = from.toString();
+
+                const to = api.createType('AccountId', data[2]);
+                t_to = to.toString();
+
+                const amount = api.createType('BalanceOf', data[3]);
+                t_amount = amount.toString();
+            }
+            await AccountHandler.ensureAccount(t_to);
+            await AccountHandler.ensureAccount(t_from);
+            const transfer = new Transfer(event.id);
+            transfer.toId = t_to;
+            transfer.fromId = t_from;
+            transfer.token = t_tokenId;
+            transfer.amount = t_amount;
+            transfer.timestamp = timestamp;
+            await transfer.save();
         }
     }
 }
