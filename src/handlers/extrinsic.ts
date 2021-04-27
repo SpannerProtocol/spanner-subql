@@ -26,19 +26,20 @@ export class ExtrinsicHandler {
         const record = new Extrinsic(extrinsicHash)
         const blockHash = this.extrinsic?.block?.block?.hash?.toString();
         const signer = this.extrinsic?.extrinsic?.signer?.toString();
+        const args = this.extrinsic?.extrinsic?.args;
         await BlockHandler.ensureBlock(blockHash)
         await AccountHandler.ensureAccount(signer)
 
         record.method = this.extrinsic.extrinsic.method.method;
         record.section = this.extrinsic.extrinsic.method.section;
-        record.args = this.extrinsic?.extrinsic?.args?.toString();
-        record.nonce = this.extrinsic?.extrinsic?.nonce?.toBigInt() || BigInt(0);
+        record.args = args?.toString();
+        record.nonce = this.extrinsic?.extrinsic?.nonce?.toString();
         record.signerId = signer;
         record.isSigned = this.extrinsic.extrinsic.isSigned;
-        record.timestamp = this.extrinsic.block.timestamp
-        record.signature = this.extrinsic.extrinsic.signature.toString()
-        record.tip = this.extrinsic.extrinsic.tip.toBigInt() || BigInt(0)
-        record.isSuccess = checkIfExtrinsicExecuteSuccess(this.extrinsic)
+        record.timestamp = this.extrinsic.block.timestamp;
+        record.signature = this.extrinsic.extrinsic.signature.toString();
+        record.tip = this.extrinsic.extrinsic.tip.toString();
+        record.isSuccess = checkIfExtrinsicExecuteSuccess(this.extrinsic);
         record.blockId = blockHash;
         await record.save()
 
@@ -47,9 +48,8 @@ export class ExtrinsicHandler {
             const transfer = new Transfer(record.id);
             let t_to: string;
             let t_tokenId: string;
-            let t_amount: bigint;
+            let t_amount: string;
             if(record.section == 'currencies'){
-                const args = this.extrinsic?.extrinsic?.args;
                 //parse destination
                 const dest = api.createType('LookupSource', args[0]);
                 t_to = dest.toString();
@@ -62,15 +62,14 @@ export class ExtrinsicHandler {
                 }
                 //parse amount
                 const amount = api.createType('Compact<BalanceOf>', args[2]);
-                t_amount = amount.toBigInt();
+                t_amount = amount.toString();
             }else if(record.section == 'balances'){
-                const args = this.extrinsic?.extrinsic?.args;
                 //parse destination
                 const dest = api.createType('LookupSource', args[0]);
                 t_to = dest.toString();
                 //parse amount
                 const amount = api.createType('Compact<BalanceOf>', args[1]);
-                t_amount = amount.toBigInt();
+                t_amount = amount.toString();
                 //native currency transfer
                 t_tokenId = 'BOLT';
             }

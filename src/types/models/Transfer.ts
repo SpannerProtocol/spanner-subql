@@ -20,7 +20,7 @@ export class Transfer implements Entity {
 
     public token?: string;
 
-    public amount?: bigint;
+    public amount?: string;
 
     public extrinsicId?: string;
 

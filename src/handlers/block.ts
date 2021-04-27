@@ -12,14 +12,19 @@ export class BlockHandler {
         }
     }
 
+    static async getTimestamp(id: string): Promise<Date> {
+        const block = await Block.get(id)
+        return block.timestamp;
+    }
+
     constructor(block: SubstrateBlock) {
         this.block = block
     }
 
     public async save () {
-        const block = new Block(this.block.block.hash.toString())
-        block.number = this.block.block.header.number.toBigInt()
-        block.specVersion = this.block.specVersion
+        const block = new Block(this.block.block.hash.toString());
+        block.number = this.block.block.header.number.toString();
+        block.specVersion = this.block.specVersion;
         block.parentHash = this.block.block.header.parentHash.toString();
         block.timestamp = getBlockTimestamp(this.block.block);
         await block.save()

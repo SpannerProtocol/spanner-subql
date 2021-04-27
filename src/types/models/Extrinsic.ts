@@ -22,13 +22,13 @@ export class Extrinsic implements Entity {
 
     public signerId?: string;
 
-    public nonce?: bigint;
+    public nonce?: string;
 
     public timestamp?: Date;
 
     public signature?: string;
 
-    public tip?: bigint;
+    public tip?: string;
 
     public isSigned?: boolean;
 

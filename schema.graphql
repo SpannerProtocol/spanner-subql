@@ -1,6 +1,6 @@
 type Block @entity {
   id: ID! #id is a required field
-  number: BigInt
+  number: String
   timestamp: Date
   parentHash: String
   specVersion: Int
@@ -24,10 +24,10 @@ type Extrinsic @entity {
   section: String
   args: String
   signer: Account
-  nonce: BigInt
+  nonce: String
   timestamp: Date
   signature: String
-  tip: BigInt
+  tip: String
   isSigned: Boolean
   isSuccess: Boolean
   block: Block
@@ -39,8 +39,8 @@ type Account @entity {
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   transferIn: [Transfer] @derivedFrom(field: "to")
   transferOut: [Transfer] @derivedFrom(field: "from")
-  travelCabins: [BigInt]
-  dpos: [BigInt]
+  travelCabins: String
+  dpos: String
 }
 
 type Transfer @entity {
@@ -48,19 +48,18 @@ type Transfer @entity {
   from: Account
   to: Account
   token: String
-  amount: BigInt
+  amount: String
   extrinsic: Extrinsic
   timestamp: Date
   isSuccess: Boolean
 }
 
-type Price @entity {
+type Swap @entity {
   id: ID!
-  blkNumber: BigInt
   timestamp: Date
   token1: String
-  tokenAmount1: BigInt
+  tokenAmount1: String
   token2: String
-  tokenAmount2: BigInt
+  tokenAmount2: String
   price: String
 }
