@@ -3,7 +3,8 @@ description: ''
 repository: https://github.com/SpannerProtocol/spanner-subql
 schema: ./schema.graphql
 network:
-  endpoint: wss://spannerchain.ddns.net
+#  endpoint: wss://spannerchain.ddns.net
+  endpoint: wss://spannerchain.ddns.net/hammer
   types: {
     "AssetId": "u32",
     "Weight": "u64",

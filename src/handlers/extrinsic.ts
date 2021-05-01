@@ -31,12 +31,12 @@ export class ExtrinsicHandler {
         record.method = this.extrinsic.extrinsic.method.method;
         record.section = this.extrinsic.extrinsic.method.section;
         record.args = args?.toString();
-        record.nonce = this.extrinsic?.extrinsic?.nonce?.toString();
+        record.nonce = this.extrinsic?.extrinsic?.nonce?.toBigInt();
         record.signerId = signer;
         record.isSigned = this.extrinsic.extrinsic.isSigned;
         record.timestamp = this.extrinsic.block.timestamp;
         record.signature = this.extrinsic.extrinsic.signature.toString();
-        record.tip = this.extrinsic.extrinsic.tip.toString();
+        record.tip = this.extrinsic.extrinsic.tip.toBigInt();
         record.isSuccess = checkIfExtrinsicExecuteSuccess(this.extrinsic);
         record.blockId = blockHash;
         await record.save()

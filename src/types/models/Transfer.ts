@@ -22,7 +22,7 @@ export class Transfer implements Entity {
 
     public token?: string;
 
-    public amount?: string;
+    public amount?: bigint;
 
 
     async save(): Promise<void>{

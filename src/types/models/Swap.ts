@@ -18,11 +18,11 @@ export class Swap implements Entity {
 
     public token1?: string;
 
-    public tokenAmount1?: string;
+    public tokenAmount1?: bigint;
 
     public token2?: string;
 
-    public tokenAmount2?: string;
+    public tokenAmount2?: bigint;
 
     public price?: string;
 

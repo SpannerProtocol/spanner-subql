@@ -75,8 +75,8 @@ export class EventHandler {
             swap.timestamp = timestamp;
             swap.token1 = path[0].asToken.toString();
             swap.token2 = path[path.length - 1].asToken.toString();
-            swap.tokenAmount1 = amount1.toString();
-            swap.tokenAmount2 = amount2.toString();
+            swap.tokenAmount1 = amount1.toBigInt();
+            swap.tokenAmount2 = amount2.toBigInt();
             await swap.save();
         }
 
@@ -85,7 +85,7 @@ export class EventHandler {
             let t_from: string;
             let t_to: string;
             let t_tokenId: string;
-            let t_amount: string;
+            let t_amount: bigint;
 
             if(event.section == 'balances'){
                 t_tokenId = 'BOLT';
@@ -97,7 +97,7 @@ export class EventHandler {
                 t_to = to.toString();
 
                 const amount = api.createType('Balance', data[2]);
-                t_amount = amount.toString();
+                t_amount = amount.toBigInt();
             }else if(event.section == 'currencies'){
                 const token = api.createType('CurrencyIdOf', data[0]);
                 if(token.isToken && token.asToken.isBolt){
@@ -116,7 +116,7 @@ export class EventHandler {
                 t_to = to.toString();
 
                 const amount = api.createType('BalanceOf', data[3]);
-                t_amount = amount.toString();
+                t_amount = amount.toBigInt();
             }
             await AccountHandler.ensureAccount(t_to);
             await AccountHandler.ensureAccount(t_from);
