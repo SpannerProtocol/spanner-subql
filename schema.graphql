@@ -1,5 +1,6 @@
 type Block @entity {
-  id: ID! #id is a required field
+  # block hash
+  id: ID!
   number: BigInt
   timestamp: Date
   parentHash: String
@@ -9,6 +10,7 @@ type Block @entity {
 }
 
 type Event @entity {
+  # <block number>-<event index>
   id: ID!
   index: Int!
   section: String!
@@ -19,6 +21,7 @@ type Event @entity {
 }
 
 type Extrinsic @entity {
+  # extrinsic hash
   id: ID!
   method: String
   section: String
@@ -35,6 +38,7 @@ type Extrinsic @entity {
 }
 
 type Account @entity {
+  # ss58 Address
   id: ID!
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   transferIn: [Transfer] @derivedFrom(field: "to")
@@ -44,6 +48,7 @@ type Account @entity {
 }
 
 type Transfer @entity {
+  # <block number>-<event index>
   id: ID!
   timestamp: Date
   from: Account
@@ -53,6 +58,7 @@ type Transfer @entity {
 }
 
 type Swap @entity {
+  # <block number>-<event index>
   id: ID!
   timestamp: Date
   token1: String

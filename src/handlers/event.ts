@@ -36,7 +36,7 @@ export class EventHandler {
 
         //handle account bulletTrain
         if(event.section == 'bulletTrain'){
-            if(event.method == 'CreateDpo'){
+            if(event.method == 'CreatedDpo'){
                 const acc = api.createType('AccountId', data[0]);
                 const dpo_id = api.createType('DpoIndex', data[1]);
                 await AccountHandler.updateAccountDpo(acc.toString(), dpo_id.toString());
