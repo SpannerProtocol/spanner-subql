@@ -80,8 +80,7 @@ export class EventHandler {
                 await swap.save();
 
                 //update hour data of pair and increment volume
-                const pairId = `${swap.token1}-${swap.token2}`;
-                const pairHourData = await dexPairHandler.updatePairHourData(pairId, timestamp);
+                const pairHourData = await dexPairHandler.updatePairHourData(swap.token1, swap.token2, timestamp);
                 pairHourData.hourlyVolumeToken1 += swap.tokenAmount1;
                 pairHourData.hourlyVolumeToken2 += swap.tokenAmount2;
                 await pairHourData.save();
@@ -89,16 +88,14 @@ export class EventHandler {
                 const token1 =  api.createType('CurrencyId', data[1]).asToken.toString();
                 const token2 =  api.createType('CurrencyId', data[3]).asToken.toString();
                 //update hour data of pair
-                const pairId = `${token1}-${token2}`;
-                await dexPairHandler.updatePairHourData(pairId, timestamp);
+                await dexPairHandler.updatePairHourData(token1, token2, timestamp);
             } else if(event.method == 'Sync') {
                 const token1 = api.createType('CurrencyId', data[0]).asToken.toString();
                 const poolAmount1 = api.createType('Balance', data[1]).toBigInt();
                 const token2 = api.createType('CurrencyId', data[2]).asToken.toString();
                 const poolAmount2 = api.createType('Balance', data[3]).toBigInt();
                 //update liquidity pool amounts of pair
-                const pairId = `${token1}-${token2}`;
-                const pair = await dexPairHandler.getPairById(pairId);
+                const pair = await dexPairHandler.getPairByTokens(token1, token2);
                 pair.poolAmount1 = poolAmount1;
                 pair.poolAmount2 = poolAmount2;
                 await pair.save();

@@ -33,7 +33,8 @@ export class ExtrinsicHandler {
         record.nonce = this.extrinsic?.extrinsic?.nonce?.toBigInt();
         record.signerId = signer;
         record.isSigned = this.extrinsic.extrinsic.isSigned;
-        record.timestamp = BigInt(this.extrinsic.block.timestamp.getTime() / 1000);
+        const timestampStr = this.extrinsic.block.timestamp.getTime().toString();
+        record.timestamp = BigInt(timestampStr.slice(0, timestampStr.length - 3));
         record.signature = this.extrinsic.extrinsic.signature.toString();
         record.tip = this.extrinsic.extrinsic.tip.toBigInt();
         record.isSuccess = checkIfExtrinsicExecuteSuccess(this.extrinsic);

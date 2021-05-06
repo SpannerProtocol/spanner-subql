@@ -19,7 +19,8 @@ export const getBlockTimestamp = (block: Block): bigint => {
             && item.method.section === 'timestamp'
     })
     if (extrinsicForSetTimestamp) {
-        return BigInt(extrinsicForSetTimestamp?.args?.[0].toString()) / BigInt(1000)
+        const timestampStr = extrinsicForSetTimestamp?.args?.[0].toString();
+        return BigInt(timestampStr.slice(0, timestampStr.length - 3))
     }
     return BigInt(0)
 }
