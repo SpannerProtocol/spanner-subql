@@ -1,4 +1,4 @@
-import {Account} from "../types/models/Account"
+import {Account} from "../types"
 
 export class AccountHandler {
     static async ensureAccount(id: string): Promise<void> {
@@ -15,28 +15,26 @@ export class AccountHandler {
 
     static async updateAccountDpo(id: string, dpo_id: string){
         const account = await this.getAccountById(id);
-        if(account.dpos){
-            const dpos = account.dpos.split(',');
-            if (!dpos.includes(dpo_id)){
-                account.dpos = account.dpos.concat(',', dpo_id);
-            }
-        }else{
-            account.dpos = dpo_id;
+        if(!account.dpos.includes(dpo_id)){
+            account.dpos.push(dpo_id)
+            await account.save();
         }
-        await account.save();
     }
 
     static async updateAccountTravelCabin(id: string, cabin_id: string){
         const account = await this.getAccountById(id);
-        if(account.travelCabins){
-            const travelCabins = account.travelCabins.split(',');
-            if (!travelCabins.includes(cabin_id)) {
-                account.travelCabins = account.travelCabins.concat(',', cabin_id)
-            }
-        }else{
-            account.travelCabins = cabin_id;
+        if(!account.travelCabins.includes(cabin_id)){
+            account.travelCabins.push(cabin_id)
+            await account.save();
         }
-        await account.save();
+    }
+
+    static async updateAccountReferee(id: string, referee_id){
+        const account = await this.getAccountById(id);
+        if(!account.refereesId.includes(referee_id)){
+            account.refereesId.push(referee_id)
+            await account.save();
+        }
     }
 
     static async updateAccount(id: string, data: Record<string, any>) {

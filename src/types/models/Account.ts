@@ -1,9 +1,7 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 // Auto-generated , DO NOT EDIT
 import {Entity} from "@subql/types";
 import assert from 'assert';
+
 
 export class Account implements Entity {
 
@@ -14,9 +12,11 @@ export class Account implements Entity {
 
     public id: string;
 
-    public travelCabins?: string;
+    public refereesId?: string[];
 
-    public dpos?: string;
+    public travelCabins?: string[];
+
+    public dpos?: string[];
 
 
     async save(): Promise<void>{
@@ -29,8 +29,8 @@ export class Account implements Entity {
         await store.remove('Account', id.toString());
     }
 
-    static async get(id:string): Promise<Account>{
-        assert(id !== null, "Cannot get Account entity without an ID");
+    static async get(id:string): Promise<Account | undefined>{
+        assert((id !== null && id !== undefined), "Cannot get Account entity without an ID");
         const record = await store.get('Account', id.toString());
         if (record){
             return Account.create(record);
@@ -38,6 +38,8 @@ export class Account implements Entity {
             return;
         }
     }
+
+
 
     static create(record){
         let entity = new Account(record.id);

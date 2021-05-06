@@ -1,11 +1,9 @@
 import { SubstrateEvent } from '@subql/types'
-import { Event } from '../types/models/Event'
+import { Event, Swap, Transfer } from '../types'
 import { BlockHandler } from './block'
 import { ExtrinsicHandler } from "./extrinsic";
 import { AccountHandler } from "./account";
 import { bnToUnit } from "./utility";
-import { Swap } from "../types/models/Swap";
-import { Transfer } from "../types/models/Transfer";
 import {dexPairHandler} from "./dexPair";
 
 export class EventHandler {
@@ -34,6 +32,8 @@ export class EventHandler {
         event.blockId = blockHash;
         event.extrinsicId = extrinsicHash;
         await event.save()
+
+        //todo: add to referee list if any
 
         //handle account bulletTrain
         if(event.section == 'bulletTrain'){

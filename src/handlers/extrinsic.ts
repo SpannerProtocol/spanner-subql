@@ -1,6 +1,6 @@
 import { SubstrateExtrinsic } from '@subql/types'
 import { checkIfExtrinsicExecuteSuccess } from './utility'
-import { Extrinsic } from '../types/models/Extrinsic'
+import { Extrinsic } from '../types'
 import { BlockHandler } from './block'
 import { AccountHandler } from "./account";
 

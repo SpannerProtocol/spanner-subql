@@ -1,9 +1,7 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 // Auto-generated , DO NOT EDIT
 import {Entity} from "@subql/types";
 import assert from 'assert';
+
 
 export class Swap implements Entity {
 
@@ -37,8 +35,8 @@ export class Swap implements Entity {
         await store.remove('Swap', id.toString());
     }
 
-    static async get(id:string): Promise<Swap>{
-        assert(id !== null, "Cannot get Swap entity without an ID");
+    static async get(id:string): Promise<Swap | undefined>{
+        assert((id !== null && id !== undefined), "Cannot get Swap entity without an ID");
         const record = await store.get('Swap', id.toString());
         if (record){
             return Swap.create(record);
@@ -46,6 +44,8 @@ export class Swap implements Entity {
             return;
         }
     }
+
+
 
     static create(record){
         let entity = new Swap(record.id);

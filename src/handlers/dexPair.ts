@@ -1,5 +1,5 @@
 import {Pair} from "../types/models/Pair";
-import {PairHourData} from "../types/models/PairHourData";
+import {PairHourData} from "../types";
 
 async function getTradingPairId(token1: string, token2: string): Promise<string> {
     const tradingPair = await api.query.dex.tradingPairStatuses.entries();

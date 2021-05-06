@@ -1106,16 +1106,16 @@
     "@types/websocket" "^1.0.1"
     websocket "^1.0.33"
 
-"@subql/cli@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@subql/cli/-/cli-0.8.0.tgz#54d81d9f748c67065788311b02bf461d95cd4297"
-  integrity sha512-xOePjtCiWkD4HJJ6hoOUJkyKhM7kY5ofcWSfQfv7IlusT8WNB+nztFmyHXS8ao+REM4yVb0jjpubEPSzv6mBzw==
+"@subql/cli@^0.9.3":
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/@subql/cli/-/cli-0.9.3.tgz#07ec0356ad74f7deefbf1cfa035cb4d9f1636d64"
+  integrity sha512-l64s+DcsAhOYAm2TJB52bhjxzGdQwdz/KN6pMo63dZ9NnTcfKGCfaOyKO6BuNCwTkhtn0nCcijWgRctz/Yfn1g==
   dependencies:
     "@oclif/command" "^1.8.0"
     "@oclif/config" "^1.17.0"
     "@oclif/plugin-help" "^3.2.1"
-    "@subql/common" "0.7.0"
-    "@subql/validator" "0.1.0"
+    "@subql/common" "0.8.3"
+    "@subql/validator" "0.1.1"
     "@types/ejs" "^3.0.5"
     chalk "^4.1.0"
     cli-ux "^5.5.1"
@@ -1124,10 +1124,10 @@
     simple-git "^2.31.0"
     tslib "^2.1.0"
 
-"@subql/common@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@subql/common/-/common-0.7.0.tgz#a28abed23e3d54dc7ea91f3f24226da522f032ae"
-  integrity sha512-NqWguWHj4pMVbswYhV7qamu65FsfSYeGdvP9FFYFRSUohPykavkxxoMm5E3GkSlTiilRRFfD/IaAbD7lRuBQGg==
+"@subql/common@0.8.3":
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/@subql/common/-/common-0.8.3.tgz#dc23a96ac47305819fb53fcf585be910a11ae1d6"
+  integrity sha512-vUCvBJKwm/eq7xsT3R1voqwvqSuzSLk93CCIGod5DXELmVEHyyh8PMXZpNVaLRcTgLA7+j2b3B5cCAXVWh9rWw==
   dependencies:
     class-transformer "0.3.1"
     class-validator "^0.13.1"
@@ -1144,10 +1144,10 @@
   resolved "https://registry.yarnpkg.com/@subql/types/-/types-0.6.1.tgz#8c5417c36b3602c66ed8f7900620e6886ca85433"
   integrity sha512-WcSg4cREzbEUj10KraCzMhbFsgkXRnt7BBcfUmfFljEII+C4uEzMvFwHH/3Vds1D6uCRXDourO5nIdrnLNBD8Q==
 
-"@subql/validator@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@subql/validator/-/validator-0.1.0.tgz#b6731a1f63d88a1b8ef973ced186806eeba0885a"
-  integrity sha512-mEjVwZ+Qmu4NlioTxXO3tDb2jA+DzMPoTkKAWK3YD/Vl33fLJm/m/AzCZv8dKCVpuhriwsu3IDI8jORCZe3Fyg==
+"@subql/validator@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@subql/validator/-/validator-0.1.1.tgz#832be9a146baeb5bd4cf71024973b60e61e1da47"
+  integrity sha512-Rtu6lflehOqMjVQSL2IZTI5Szj5CCnsXKUgHL+ugNFng1wpDWsLUTg7bXTcejpVz+PQr4LpH/akW9kURfoy+Zw==
   dependencies:
     axios "^0.21.1"
     js-yaml "^4.0.0"
