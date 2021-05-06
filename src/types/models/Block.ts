@@ -16,7 +16,7 @@ export class Block implements Entity {
 
     public number?: bigint;
 
-    public timestamp?: Date;
+    public timestamp?: bigint;
 
     public parentHash?: string;
 

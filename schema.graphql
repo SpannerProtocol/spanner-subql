@@ -2,11 +2,11 @@ type Block @entity {
   # block hash
   id: ID!
   number: BigInt
-  timestamp: Date
+  timestamp: BigInt
   parentHash: String
   specVersion: Int
-  extrinsics: [Extrinsic] @derivedFrom(field: "block")
-  events: [Event] @derivedFrom(field: "block")
+  extrinsics: [Extrinsic!] @derivedFrom(field: "block")
+  events: [Event!] @derivedFrom(field: "block")
 }
 
 type Event @entity {
@@ -28,21 +28,21 @@ type Extrinsic @entity {
   args: String
   signer: Account
   nonce: BigInt
-  timestamp: Date
+  timestamp: BigInt
   signature: String
   tip: BigInt
   isSigned: Boolean
   isSuccess: Boolean
   block: Block
-  events: [Event] @derivedFrom(field: "extrinsic")
+  events: [Event!] @derivedFrom(field: "extrinsic")
 }
 
 type Account @entity {
   # ss58 Address
   id: ID!
-  extrinsics: [Extrinsic] @derivedFrom(field: "signer")
-  transferIn: [Transfer] @derivedFrom(field: "to")
-  transferOut: [Transfer] @derivedFrom(field: "from")
+  extrinsics: [Extrinsic!] @derivedFrom(field: "signer")
+  transferIn: [Transfer!] @derivedFrom(field: "to")
+  transferOut: [Transfer!] @derivedFrom(field: "from")
   travelCabins: String
   dpos: String
 }
@@ -50,20 +50,43 @@ type Account @entity {
 type Transfer @entity {
   # <block number>-<event index>
   id: ID!
-  timestamp: Date
-  from: Account
-  to: Account
-  token: String
-  amount: BigInt
+  timestamp: BigInt!
+  from: Account!
+  to: Account!
+  token: String!
+  amount: BigInt!
 }
 
 type Swap @entity {
   # <block number>-<event index>
   id: ID!
-  timestamp: Date
-  token1: String
-  tokenAmount1: BigInt
-  token2: String
-  tokenAmount2: BigInt
-  price: String
+  timestamp: BigInt!
+  token1: String!
+  tokenAmount1: BigInt!
+  token2: String!
+  tokenAmount2: BigInt!
+  price: String!
+}
+
+type Pair @entity {
+  # trading pair
+  # <token1>-<token2>
+  id: ID!
+  token1: String!
+  poolAmount1: BigInt!
+  token2: String!
+  poolAmount2: BigInt!
+  pairHourData: [PairHourData!] @derivedFrom(field: "pair")
+}
+
+type PairHourData @entity {
+  # <token1>-<token2>-<hourIndex>
+  id: ID!
+  hourStartTime: BigInt!
+  pair: Pair!
+  poolAmount1: BigInt!
+  poolAmount2: BigInt!
+  hourlyVolumeToken1: BigInt!
+  hourlyVolumeToken2: BigInt!
+  hourlyTxns: BigInt!
 }

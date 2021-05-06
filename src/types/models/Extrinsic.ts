@@ -24,7 +24,7 @@ export class Extrinsic implements Entity {
 
     public nonce?: bigint;
 
-    public timestamp?: Date;
+    public timestamp?: bigint;
 
     public signature?: string;
 

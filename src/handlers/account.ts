@@ -1,14 +1,14 @@
 import {Account} from "../types/models/Account"
 
 export class AccountHandler {
-    static async ensureAccount(id: string) {
+    static async ensureAccount(id: string): Promise<void> {
         const account = await Account.get(id)
         if (!account) {
             return new Account(id).save()
         }
     }
 
-    static async getAccountById(id: string) {
+    static async getAccountById(id: string): Promise<Account> {
         await this.ensureAccount(id)
         return await Account.get(id)
     }

@@ -9,7 +9,6 @@ export class ExtrinsicHandler {
 
     static async ensureExtrinsic(id: string): Promise<void> {
         const extrinsic = await Extrinsic.get(id)
-
         if (!extrinsic) {
             await new Extrinsic(id).save()
         }
@@ -34,7 +33,7 @@ export class ExtrinsicHandler {
         record.nonce = this.extrinsic?.extrinsic?.nonce?.toBigInt();
         record.signerId = signer;
         record.isSigned = this.extrinsic.extrinsic.isSigned;
-        record.timestamp = this.extrinsic.block.timestamp;
+        record.timestamp = BigInt(this.extrinsic.block.timestamp.getTime() / 1000);
         record.signature = this.extrinsic.extrinsic.signature.toString();
         record.tip = this.extrinsic.extrinsic.tip.toBigInt();
         record.isSuccess = checkIfExtrinsicExecuteSuccess(this.extrinsic);

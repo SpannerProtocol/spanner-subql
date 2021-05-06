@@ -12,7 +12,7 @@ export class BlockHandler {
         }
     }
 
-    static async getTimestamp(id: string): Promise<Date> {
+    static async getTimestamp(id: string): Promise<bigint> {
         const block = await Block.get(id)
         return block.timestamp;
     }

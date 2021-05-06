@@ -6,6 +6,7 @@ import { AccountHandler } from "./account";
 import { bnToUnit } from "./utility";
 import { Swap } from "../types/models/Swap";
 import { Transfer } from "../types/models/Transfer";
+import {dexPairHandler} from "./dexPair";
 
 export class EventHandler {
     private readonly event: SubstrateEvent
@@ -18,7 +19,7 @@ export class EventHandler {
         const blockHash = this.event.block.block.hash.toString();
         const event = new Event(`${blockNumber}-${this.event.idx}`);
         const data = this.event.event.data;
-        await BlockHandler.ensureBlock(blockHash)
+        await BlockHandler.ensureBlock(blockHash);
         const timestamp = await BlockHandler.getTimestamp(blockHash);
 
         const extrinsicHash = this.event?.extrinsic?.extrinsic?.hash?.toString();
@@ -26,8 +27,8 @@ export class EventHandler {
             await ExtrinsicHandler.ensureExtrinsic(extrinsicHash)
         }
 
-        event.index = this.event.idx
-        event.section = this.event.event.section
+        event.index = this.event.idx;
+        event.section = this.event.event.section;
         event.method = this.event.event.method;
         event.data = data.toString();
         event.blockId = blockHash;
@@ -53,31 +54,55 @@ export class EventHandler {
                     const acc = api.createType('AccountId', data[0]);
                     const tc_id = api.createType('TravelCabinIndex', data[2]);
                     const tc_inv_idx = api.createType('TravelCabinInventoryIndex', data[3]);
-                    await AccountHandler.updateAccountTravelCabin(acc.toString(), `${tc_id}-${tc_inv_idx}`)
+                    await AccountHandler.updateAccountTravelCabin(acc.toString(), `${tc_id}-${tc_inv_idx}`);
                 }
             }
         }
 
         //handle swap price
-        if(event.section == 'dex' && event.method == 'Swap'){
-            const chain_decimal = api.registry.chainDecimals[0];
-            const path = api.createType('Vec<CurrencyId>', data[1]);
-            const amount1 = api.createType('Balance', data[2]);
-            const amount2 = api.createType('Balance', data[3]);
+        if(event.section == 'dex'){
+            if(event.method == 'Swap'){
+                const chain_decimal = api.registry.chainDecimals[0];
+                const path = api.createType('Vec<CurrencyId>', data[1]);
+                const amount1 = api.createType('Balance', data[2]);
+                const amount2 = api.createType('Balance', data[3]);
 
-            const swap = new Swap(event.id);
+                const swap = new Swap(event.id);
+                const n_amount1 = bnToUnit(amount1.toBn(), chain_decimal);
+                const n_amount2 = bnToUnit(amount2.toBn(), chain_decimal);
+                const price = n_amount2 / n_amount1;
+                swap.price = price.toString();
+                swap.timestamp = timestamp;
+                swap.token1 = path[0].asToken.toString();
+                swap.token2 = path[path.length - 1].asToken.toString();
+                swap.tokenAmount1 = amount1.toBigInt();
+                swap.tokenAmount2 = amount2.toBigInt();
+                await swap.save();
 
-            const n_amount1 = bnToUnit(amount1.toBn(), chain_decimal);
-            const n_amount2 = bnToUnit(amount2.toBn(), chain_decimal);
-            const price = n_amount2 / n_amount1;
-
-            swap.price = price.toString();
-            swap.timestamp = timestamp;
-            swap.token1 = path[0].asToken.toString();
-            swap.token2 = path[path.length - 1].asToken.toString();
-            swap.tokenAmount1 = amount1.toBigInt();
-            swap.tokenAmount2 = amount2.toBigInt();
-            await swap.save();
+                //update hour data of pair and increment volume
+                const pairId = `${swap.token1}-${swap.token2}`;
+                const pairHourData = await dexPairHandler.updatePairHourData(pairId, timestamp);
+                pairHourData.hourlyVolumeToken1 += swap.tokenAmount1;
+                pairHourData.hourlyVolumeToken2 += swap.tokenAmount2;
+                await pairHourData.save();
+            } else if(event.method == 'AddLiquidity' || event.method == 'RemoveLiquidity'){
+                const token1 =  api.createType('CurrencyId', data[1]).asToken.toString();
+                const token2 =  api.createType('CurrencyId', data[3]).asToken.toString();
+                //update hour data of pair
+                const pairId = `${token1}-${token2}`;
+                await dexPairHandler.updatePairHourData(pairId, timestamp);
+            } else if(event.method == 'Sync') {
+                const token1 = api.createType('CurrencyId', data[0]).asToken.toString();
+                const poolAmount1 = api.createType('Balance', data[1]).toBigInt();
+                const token2 = api.createType('CurrencyId', data[2]).asToken.toString();
+                const poolAmount2 = api.createType('Balance', data[3]).toBigInt();
+                //update liquidity pool amounts of pair
+                const pairId = `${token1}-${token2}`;
+                const pair = await dexPairHandler.getPairById(pairId);
+                pair.poolAmount1 = poolAmount1;
+                pair.poolAmount2 = poolAmount2;
+                await pair.save();
+            }
         }
 
         //handle transfer

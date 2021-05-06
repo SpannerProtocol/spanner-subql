@@ -14,17 +14,17 @@ export class Swap implements Entity {
 
     public id: string;
 
-    public timestamp?: Date;
+    public timestamp: bigint;
 
-    public token1?: string;
+    public token1: string;
 
-    public tokenAmount1?: bigint;
+    public tokenAmount1: bigint;
 
-    public token2?: string;
+    public token2: string;
 
-    public tokenAmount2?: bigint;
+    public tokenAmount2: bigint;
 
-    public price?: string;
+    public price: string;
 
 
     async save(): Promise<void>{

@@ -14,15 +14,15 @@ export class Transfer implements Entity {
 
     public id: string;
 
-    public timestamp?: Date;
+    public timestamp: bigint;
 
-    public fromId?: string;
+    public fromId: string;
 
-    public toId?: string;
+    public toId: string;
 
-    public token?: string;
+    public token: string;
 
-    public amount?: bigint;
+    public amount: bigint;
 
 
     async save(): Promise<void>{

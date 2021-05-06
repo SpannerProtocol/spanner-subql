@@ -13,17 +13,15 @@ export function bnToUnit(num: BN, chainDecimals: number): number {
     }
 }
 
-export const getBlockTimestamp = (block: Block): Date => {
+export const getBlockTimestamp = (block: Block): bigint => {
     const extrinsicForSetTimestamp = block.extrinsics.find((item) => {
         return item.method.method === 'set'
             && item.method.section === 'timestamp'
     })
     if (extrinsicForSetTimestamp) {
-        return new Date(
-            Number(extrinsicForSetTimestamp?.args?.[0].toString())
-        )
+        return BigInt(extrinsicForSetTimestamp?.args?.[0].toString()) / BigInt(1000)
     }
-    return new Date()
+    return BigInt(0)
 }
 
 export const checkIfExtrinsicExecuteSuccess = (extrinsic: SubstrateExtrinsic): boolean => {
