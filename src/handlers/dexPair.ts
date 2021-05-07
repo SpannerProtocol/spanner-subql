@@ -60,7 +60,6 @@ export class dexPairHandler {
     }
     pairHourData.poolAmount1 = pair.poolAmount1;
     pairHourData.poolAmount2 = pair.poolAmount2;
-    pairHourData.hourlyTxns += BigInt(1);
     await pairHourData.save();
     return pairHourData;
   }

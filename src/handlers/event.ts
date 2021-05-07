@@ -103,6 +103,7 @@ export class EventHandler {
           pairHourData.hourlyVolumeToken1 += swap.tokenAmount2;
           pairHourData.hourlyVolumeToken2 += swap.tokenAmount1;
         }
+        pairHourData.hourlyTxns += BigInt(1);
         await pairHourData.save();
       } else if (
         event.method == 'AddLiquidity' ||
