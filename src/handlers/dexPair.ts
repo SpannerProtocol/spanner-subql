@@ -44,7 +44,7 @@ export class dexPairHandler {
     token1: string,
     token2: string,
     timestamp: bigint,
-  ) {
+  ): Promise<PairHourData> {
     const pair = await this.getPairByTokens(token1, token2);
     const hourIndex = timestamp / BigInt(3600);
     const hourStartTime = hourIndex * BigInt(3600);

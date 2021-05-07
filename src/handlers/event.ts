@@ -95,8 +95,14 @@ export class EventHandler {
           swap.token2,
           timestamp,
         );
-        pairHourData.hourlyVolumeToken1 += swap.tokenAmount1;
-        pairHourData.hourlyVolumeToken2 += swap.tokenAmount2;
+        const tokenPair = pairHourData.pairId.split('-');
+        if (tokenPair[0] == swap.token1) {
+          pairHourData.hourlyVolumeToken1 += swap.tokenAmount1;
+          pairHourData.hourlyVolumeToken2 += swap.tokenAmount2;
+        } else {
+          pairHourData.hourlyVolumeToken1 += swap.tokenAmount2;
+          pairHourData.hourlyVolumeToken2 += swap.tokenAmount1;
+        }
         await pairHourData.save();
       } else if (
         event.method == 'AddLiquidity' ||
