@@ -2,18 +2,19 @@
 
 // Auto-generated , DO NOT EDIT
 
-export { Block } from './Block';
+export {Block} from "./Block"
 
-export { Event } from './Event';
+export {Event} from "./Event"
 
-export { Extrinsic } from './Extrinsic';
+export {Extrinsic} from "./Extrinsic"
 
-export { Account } from './Account';
+export {Account} from "./Account"
 
-export { Transfer } from './Transfer';
+export {Transfer} from "./Transfer"
 
-export { Swap } from './Swap';
+export {Swap} from "./Swap"
 
-export { Pair } from './Pair';
+export {Pair} from "./Pair"
 
-export { PairHourData } from './PairHourData';
+export {PairHourData} from "./PairHourData"
+
