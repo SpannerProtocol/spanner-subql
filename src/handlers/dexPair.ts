@@ -10,9 +10,8 @@ async function getTradingPairId(
     const tokenA = pair[0].args[0][0].asToken.toString();
     const tokenB = pair[0].args[0][1].asToken.toString();
     if (
-      (token1.localeCompare(tokenA) == 0 &&
-        token2.localeCompare(tokenB) == 0) ||
-      (token2.localeCompare(tokenA) == 0 && token1.localeCompare(tokenB) == 0)
+      (token1 == tokenA && token2 == tokenB) ||
+      (token2 == tokenA && token1 == tokenB)
     ) {
       return `${tokenA}-${tokenB}`;
     }
@@ -21,27 +20,24 @@ async function getTradingPairId(
 }
 
 export class dexPairHandler {
-  static async ensureDexPair(id: string): Promise<void> {
-    const pair = await Pair.get(id);
+  static async ensureDexPair(tokenA: string, tokenB: string): Promise<Pair> {
+    let id = `${tokenA}-${tokenB}`;
+    let pair = await Pair.get(id);
     if (!pair) {
+      id = await getTradingPairId(tokenA, tokenB);
       const [token1, token2] = id.split('-');
-      const pair = new Pair(id);
+      pair = new Pair(id);
       pair.token1 = token1;
       pair.poolAmount1 = BigInt(0);
       pair.token2 = token2;
       pair.poolAmount2 = BigInt(0);
       await pair.save();
     }
+    return pair;
   }
 
   static async getPairByTokens(token1: string, token2: string): Promise<Pair> {
-    let id = `${token1}-${token2}`;
-    const pair = await Pair.get(id);
-    if (!pair) {
-      id = await getTradingPairId(token1, token2);
-    }
-    await this.ensureDexPair(id);
-    return await Pair.get(id);
+    return await this.ensureDexPair(token1, token2);
   }
 
   static async updatePairHourData(
