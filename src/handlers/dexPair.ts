@@ -6,9 +6,9 @@ async function getTradingPairId(
   token2: string,
 ): Promise<string> {
   const tradingPair = await api.query.dex.tradingPairStatuses.entries();
-  for (const [tp, v] of tradingPair) {
-    const tokenA = tp.args[0][0].asToken.toString();
-    const tokenB = tp.args[0][1].asToken.toString();
+  for (const pair of tradingPair) {
+    const tokenA = pair[0].args[0][0].asToken.toString();
+    const tokenB = pair[0].args[0][1].asToken.toString();
     if (
       (token1.localeCompare(tokenA) == 0 &&
         token2.localeCompare(tokenB) == 0) ||

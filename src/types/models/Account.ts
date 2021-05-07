@@ -12,11 +12,11 @@ export class Account implements Entity {
 
     public id: string;
 
-    public refereesId?: string[];
+    public referees?: string;
 
-    public travelCabins?: string[];
+    public travelCabins?: string;
 
-    public dpos?: string[];
+    public dpos?: string;
 
 
     async save(): Promise<void>{

@@ -43,9 +43,9 @@ type Account @entity {
   extrinsics: [Extrinsic!] @derivedFrom(field: "signer")
   transferIn: [Transfer!] @derivedFrom(field: "to")
   transferOut: [Transfer!] @derivedFrom(field: "from")
-  referees: [Account!]
-  travelCabins: [String!]
-  dpos: [String!]
+  referees: String
+  travelCabins: String
+  dpos: String
 }
 
 type Transfer @entity {
