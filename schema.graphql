@@ -74,6 +74,7 @@ type PairHourData @entity {
   id: ID!
   hourStartTime: BigInt!
   pair: Pair!
+  price: String!
   poolAmount1: BigInt!
   poolAmount2: BigInt!
   hourlyVolumeToken1: BigInt!

@@ -16,6 +16,8 @@ export class PairHourData implements Entity {
 
     public pairId: string;
 
+    public price: string;
+
     public poolAmount1: bigint;
 
     public poolAmount2: bigint;

@@ -1,5 +1,6 @@
 import { Pair } from '../types';
 import { PairHourData } from '../types';
+import { bnToUnit } from './utility';
 
 async function getTradingPairId(
   token1: string,
@@ -55,6 +56,15 @@ export class dexPairHandler {
     }
     pairHourData.poolAmount1 = pair.poolAmount1;
     pairHourData.poolAmount2 = pair.poolAmount2;
+
+    const amount1 = bnToUnit(pair.poolAmount1, api.registry.chainDecimals[0]);
+    const amount2 = bnToUnit(pair.poolAmount2, api.registry.chainDecimals[0]);
+    if (amount1 > 0 && amount2 > 0) {
+      pairHourData.price = (amount2 / amount1).toFixed(6).toString();
+    } else {
+      pairHourData.price = '0';
+    }
+
     return await pairHourData.save();
   }
 

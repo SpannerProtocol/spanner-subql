@@ -2,14 +2,14 @@ import * as BN from 'bn.js';
 import { Block } from '@polkadot/types/interfaces/runtime';
 import { SubstrateExtrinsic } from '@subql/types';
 
-export function bnToUnit(num: BN, chainDecimals: number): number {
+export function bnToUnit(num: BN | bigint, chainDecimals: number): number {
   const numStr = num.toString();
   if (numStr.length > chainDecimals) {
     const integer = numStr.substr(0, numStr.length - chainDecimals);
     const decimal = numStr.substr(numStr.length - chainDecimals);
     return parseFloat(integer + '.' + decimal);
   } else {
-    return num.toNumber() / 10 ** chainDecimals;
+    return parseFloat(num.toString()) / 10 ** chainDecimals;
   }
 }
 
