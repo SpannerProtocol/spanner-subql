@@ -1,17 +1,20 @@
 import { Account } from '../types';
 
 export class AccountHandler {
-  static async ensureAccount(id: string): Promise<Account> {
-    let account = await Account.get(id);
+  static async ensureAccount(id: string): Promise<void> {
+    const account = await Account.get(id);
     if (!account) {
-      account = new Account(id);
-      await account.save();
+      return new Account(id).save();
     }
-    return account;
+  }
+
+  static async getAccountById(id: string): Promise<Account> {
+    await this.ensureAccount(id);
+    return await Account.get(id);
   }
 
   static async updateAccountDpo(id: string, dpo_id: string) {
-    const account = await this.ensureAccount(id);
+    const account = await this.getAccountById(id);
     if (account.dpos && !account.dpos.split(',').includes(dpo_id)) {
       account.dpos = account.dpos.concat(',', dpo_id);
     } else {
@@ -21,7 +24,7 @@ export class AccountHandler {
   }
 
   static async updateAccountTravelCabin(id: string, cabin_id: string) {
-    const account = await this.ensureAccount(id);
+    const account = await this.getAccountById(id);
     if (
       account.travelCabins &&
       !account.travelCabins.split(',').includes(cabin_id)
@@ -37,7 +40,7 @@ export class AccountHandler {
   //referrer in args of call and referee is signer of call
   static async updateAccountReferee(id: string, referee_id: string) {
     if (id.length > 0 && referee_id.length > 0 && id !== referee_id) {
-      const account = await this.ensureAccount(id);
+      const account = await this.getAccountById(id);
       if (
         account.referees &&
         !account.referees.split(',').includes(referee_id)
@@ -51,7 +54,7 @@ export class AccountHandler {
   }
 
   static async updateAccount(id: string, data: Record<string, any>) {
-    const account = await this.ensureAccount(id);
+    const account = await this.getAccountById(id);
     Object.keys(data).forEach((key, value) => {
       account[key] = value;
     });

@@ -20,24 +20,42 @@ async function getTradingPairId(
 }
 
 export class dexPairHandler {
-  static async ensureDexPair(tokenA: string, tokenB: string): Promise<Pair> {
-    let id = `${tokenA}-${tokenB}`;
-    let pair = await Pair.get(id);
+  static async ensureDexPair(id: string): Promise<void> {
+    const pair = await Pair.get(id);
     if (!pair) {
-      id = await getTradingPairId(tokenA, tokenB);
       const [token1, token2] = id.split('-');
-      pair = new Pair(id);
-      pair.token1 = token1;
-      pair.poolAmount1 = BigInt(0);
-      pair.token2 = token2;
-      pair.poolAmount2 = BigInt(0);
-      await pair.save();
+      const new_pair = new Pair(id);
+      new_pair.token1 = token1;
+      new_pair.poolAmount1 = BigInt(0);
+      new_pair.token2 = token2;
+      new_pair.poolAmount2 = BigInt(0);
+      return await new_pair.save();
     }
-    return pair;
   }
 
   static async getPairByTokens(token1: string, token2: string): Promise<Pair> {
-    return await this.ensureDexPair(token1, token2);
+    const id = await getTradingPairId(token1, token2);
+    await this.ensureDexPair(id);
+    return await Pair.get(id);
+  }
+
+  static async ensurePairHourData(
+    hourId: string,
+    pair: Pair,
+    startTime: bigint,
+  ): Promise<void> {
+    let pairHourData = await PairHourData.get(hourId);
+    if (!pairHourData) {
+      pairHourData = new PairHourData(hourId);
+      pairHourData.hourStartTime = startTime;
+      pairHourData.pairId = pair.id;
+      pairHourData.hourlyVolumeToken1 = BigInt(0);
+      pairHourData.hourlyVolumeToken2 = BigInt(0);
+      pairHourData.hourlyTxns = BigInt(0);
+    }
+    pairHourData.poolAmount1 = pair.poolAmount1;
+    pairHourData.poolAmount2 = pair.poolAmount2;
+    return await pairHourData.save();
   }
 
   static async updatePairHourData(
@@ -49,18 +67,7 @@ export class dexPairHandler {
     const hourIndex = timestamp / BigInt(3600);
     const hourStartTime = hourIndex * BigInt(3600);
     const hourPairId = pair.id.concat('-', hourIndex.toString());
-    let pairHourData = await PairHourData.get(hourPairId);
-    if (!pairHourData) {
-      pairHourData = new PairHourData(hourPairId);
-      pairHourData.hourStartTime = hourStartTime;
-      pairHourData.pairId = pair.id;
-      pairHourData.hourlyVolumeToken1 = BigInt(0);
-      pairHourData.hourlyVolumeToken2 = BigInt(0);
-      pairHourData.hourlyTxns = BigInt(0);
-    }
-    pairHourData.poolAmount1 = pair.poolAmount1;
-    pairHourData.poolAmount2 = pair.poolAmount2;
-    await pairHourData.save();
-    return pairHourData;
+    await this.ensurePairHourData(hourPairId, pair, hourStartTime);
+    return await PairHourData.get(hourPairId);
   }
 }
