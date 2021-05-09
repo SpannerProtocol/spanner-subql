@@ -58,17 +58,6 @@ type Transfer @entity {
   amount: BigInt!
 }
 
-type Swap @entity {
-  # <block number>-<event index>
-  id: ID!
-  timestamp: BigInt!
-  token1: String!
-  tokenAmount1: BigInt!
-  token2: String!
-  tokenAmount2: BigInt!
-  price: String!
-}
-
 type Pair @entity {
   # trading pair
   # <token1>-<token2>

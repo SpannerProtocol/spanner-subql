@@ -1,9 +1,8 @@
 import { SubstrateEvent } from '@subql/types';
-import { Event, Swap, Transfer } from '../types';
+import { Event, Transfer } from '../types';
 import { BlockHandler } from './block';
 import { ExtrinsicHandler } from './extrinsic';
 import { AccountHandler } from './account';
-import { bnToUnit } from './utility';
 import { dexPairHandler } from './dexPair';
 
 export class EventHandler {
@@ -72,36 +71,38 @@ export class EventHandler {
     //handle swap price
     if (event.section == 'dex') {
       if (event.method == 'Swap') {
-        const chain_decimal = api.registry.chainDecimals[0];
         const path = api.createType('Vec<CurrencyId>', data[1]);
-        const amount1 = api.createType('Balance', data[2]);
-        const amount2 = api.createType('Balance', data[3]);
+        const token1 = path[0].asToken.toString();
+        const token2 = path[path.length - 1].asToken.toString();
+        const amount1 = api.createType('Balance', data[2]).toBigInt();
+        const amount2 = api.createType('Balance', data[3]).toBigInt();
 
-        const swap = new Swap(event.id);
-        const n_amount1 = bnToUnit(amount1.toBn(), chain_decimal);
-        const n_amount2 = bnToUnit(amount2.toBn(), chain_decimal);
-        const price = n_amount2 / n_amount1;
-        swap.price = price.toString();
-        swap.timestamp = timestamp;
-        swap.token1 = path[0].asToken.toString();
-        swap.token2 = path[path.length - 1].asToken.toString();
-        swap.tokenAmount1 = amount1.toBigInt();
-        swap.tokenAmount2 = amount2.toBigInt();
-        await swap.save();
+        //update pair using swap event (average price) up until sync event (current price) is available
+        if (this.event.block.specVersion < 102) {
+          const pair = await dexPairHandler.getPairByTokens(token1, token2);
+          if (pair.token1 == token1) {
+            pair.poolAmount1 = amount1;
+            pair.poolAmount2 = amount2;
+          } else {
+            pair.poolAmount1 = amount2;
+            pair.poolAmount2 = amount1;
+          }
+          await pair.save();
+        }
 
-        //update hour data of pair and increment volume
+        //update hour data
         const pairHourData = await dexPairHandler.updatePairHourData(
-          swap.token1,
-          swap.token2,
+          token1,
+          token2,
           timestamp,
         );
         const tokenPair = pairHourData.pairId.split('-');
-        if (tokenPair[0] == swap.token1) {
-          pairHourData.hourlyVolumeToken1 += swap.tokenAmount1;
-          pairHourData.hourlyVolumeToken2 += swap.tokenAmount2;
+        if (tokenPair[0] == token1) {
+          pairHourData.hourlyVolumeToken1 += amount1;
+          pairHourData.hourlyVolumeToken2 += amount2;
         } else {
-          pairHourData.hourlyVolumeToken1 += swap.tokenAmount2;
-          pairHourData.hourlyVolumeToken2 += swap.tokenAmount1;
+          pairHourData.hourlyVolumeToken1 += amount2;
+          pairHourData.hourlyVolumeToken2 += amount1;
         }
         pairHourData.hourlyTxns += BigInt(1);
         await pairHourData.save();
@@ -109,16 +110,17 @@ export class EventHandler {
         event.method == 'AddLiquidity' ||
         event.method == 'RemoveLiquidity'
       ) {
+        //update hour data
         const token1 = api.createType('CurrencyId', data[1]).asToken.toString();
         const token2 = api.createType('CurrencyId', data[3]).asToken.toString();
-        //update hour data of pair
         await dexPairHandler.updatePairHourData(token1, token2, timestamp);
       } else if (event.method == 'Sync') {
+        //update pair data
+        //order of data is always according to TradingPair, no need to handle
         const token1 = api.createType('CurrencyId', data[0]).asToken.toString();
         const poolAmount1 = api.createType('Balance', data[1]).toBigInt();
         const token2 = api.createType('CurrencyId', data[2]).asToken.toString();
         const poolAmount2 = api.createType('Balance', data[3]).toBigInt();
-        //update liquidity pool amounts of pair
         const pair = await dexPairHandler.getPairByTokens(token1, token2);
         pair.poolAmount1 = poolAmount1;
         pair.poolAmount2 = poolAmount2;

@@ -12,8 +12,6 @@ export {Account} from "./Account"
 
 export {Transfer} from "./Transfer"
 
-export {Swap} from "./Swap"
-
 export {Pair} from "./Pair"
 
 export {PairHourData} from "./PairHourData"
