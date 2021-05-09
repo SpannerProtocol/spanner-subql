@@ -12,27 +12,27 @@ export class Extrinsic implements Entity {
 
     public id: string;
 
-    public method?: string;
+    public method: string;
 
-    public section?: string;
+    public section: string;
 
-    public args?: string;
+    public args: string;
 
-    public signerId?: string;
+    public signerId: string;
 
-    public nonce?: bigint;
+    public nonce: bigint;
 
-    public timestamp?: bigint;
+    public timestamp: bigint;
 
-    public signature?: string;
+    public signature: string;
 
-    public tip?: bigint;
+    public tip: bigint;
 
-    public isSigned?: boolean;
+    public isSigned: boolean;
 
-    public isSuccess?: boolean;
+    public isSuccess: boolean;
 
-    public blockId?: string;
+    public blockId: string;
 
 
     async save(): Promise<void>{

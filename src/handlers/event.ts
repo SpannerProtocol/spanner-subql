@@ -1,7 +1,6 @@
 import { SubstrateEvent } from '@subql/types';
 import { Event, Transfer } from '../types';
 import { BlockHandler } from './block';
-import { ExtrinsicHandler } from './extrinsic';
 import { AccountHandler } from './account';
 import { dexPairHandler } from './dexPair';
 
@@ -16,20 +15,13 @@ export class EventHandler {
     const blockHash = this.event.block.block.hash.toString();
     const event = new Event(`${blockNumber}-${this.event.idx}`);
     const data = this.event.event.data;
-    await BlockHandler.ensureBlock(blockHash);
     const timestamp = await BlockHandler.getTimestamp(blockHash);
-
-    const extrinsicHash = this.event?.extrinsic?.extrinsic?.hash?.toString();
-    if (extrinsicHash && extrinsicHash !== 'null') {
-      await ExtrinsicHandler.ensureExtrinsic(extrinsicHash);
-    }
-
     event.index = this.event.idx;
     event.section = this.event.event.section;
     event.method = this.event.event.method;
     event.data = data.toString();
     event.blockId = blockHash;
-    event.extrinsicId = extrinsicHash;
+    event.extrinsicId = this.event.extrinsic?.extrinsic?.hash?.toString();
     await event.save();
 
     //handle account bulletTrain
