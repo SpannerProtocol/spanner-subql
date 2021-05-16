@@ -12,6 +12,8 @@ export class Transfer implements Entity {
 
     public id: string;
 
+    public eventId: string;
+
     public timestamp: bigint;
 
     public fromId: string;

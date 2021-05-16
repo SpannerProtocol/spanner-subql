@@ -159,6 +159,7 @@ export class EventHandler {
       await AccountHandler.ensureAccount(t_to);
       await AccountHandler.ensureAccount(t_from);
       const transfer = new Transfer(event.id);
+      transfer.eventId = event.id;
       transfer.toId = t_to;
       transfer.fromId = t_from;
       transfer.token = t_tokenId;

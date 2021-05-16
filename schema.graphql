@@ -51,6 +51,7 @@ type Account @entity {
 type Transfer @entity {
   # <block number>-<event index>
   id: ID!
+  event: Event!
   timestamp: BigInt!
   from: Account!
   to: Account!
