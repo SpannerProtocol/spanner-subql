@@ -12,6 +12,10 @@ export {Account} from "./Account"
 
 export {Transfer} from "./Transfer"
 
+export {Dpo} from "./Dpo"
+
+export {TravelCabin} from "./TravelCabin"
+
 export {Pair} from "./Pair"
 
 export {PairHourData} from "./PairHourData"

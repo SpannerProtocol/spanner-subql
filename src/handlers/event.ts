@@ -3,6 +3,8 @@ import { Event, Transfer } from '../types';
 import { BlockHandler } from './block';
 import { AccountHandler } from './account';
 import { dexPairHandler } from './dexPair';
+import { DpoHandler } from './dpo';
+import { TravelCabinHandler } from './travelCabin';
 
 export class EventHandler {
   private readonly event: SubstrateEvent;
@@ -29,15 +31,17 @@ export class EventHandler {
       if (event.method == 'CreatedDpo') {
         const acc = api.createType('AccountId', data[0]);
         const dpo_id = api.createType('DpoIndex', data[1]);
+        await DpoHandler.updateDpoEvents(dpo_id.toString(), event.id);
         await AccountHandler.updateAccountDpo(
           acc.toString(),
           dpo_id.toString(),
         );
       } else if (event.method == 'DpoTargetPurchased') {
+        const dpo_id = api.createType('DpoIndex', data[2]);
+        await DpoHandler.updateDpoEvents(dpo_id.toString(), event.id);
         const buyer = api.createType('Buyer', data[1]);
         if (buyer.isPassenger) {
           const acc = api.createType('AccountId', data[0]);
-          const dpo_id = api.createType('DpoIndex', data[2]);
           await AccountHandler.updateAccountDpo(
             acc.toString(),
             dpo_id.toString(),
@@ -52,11 +56,26 @@ export class EventHandler {
             'TravelCabinInventoryIndex',
             data[3],
           );
-          await AccountHandler.updateAccountTravelCabin(
-            acc.toString(),
-            `${tc_id}-${tc_inv_idx}`,
-          );
+          const id = `${tc_id}-${tc_inv_idx}`;
+          await TravelCabinHandler.updateTravelCabinEvents(id, event.id);
+          await AccountHandler.updateAccountTravelCabin(acc.toString(), id);
         }
+      } else if (
+        event.method == 'YieldReleased' ||
+        event.method == 'BonusReleased' ||
+        event.method == 'WithdrewFareFromDpo'
+      ) {
+        const dpo_id = api.createType('DpoIndex', data[1]);
+        await DpoHandler.updateDpoEvents(dpo_id.toString(), event.id);
+      } else if (
+        event.method == 'FareWithdrawnFromTravelCabin' ||
+        event.method == 'YieldWithdrawnFromTravelCabin' ||
+        event.method == 'TreasureHunted'
+      ) {
+        const tc_id = api.createType('TravelCabinIndex', data[1]);
+        const tc_inv_idx = api.createType('TravelCabinBuyerInfo', data[2]);
+        const id = `${tc_id}-${tc_inv_idx}`;
+        await TravelCabinHandler.updateTravelCabinEvents(id, event.id);
       }
     }
 

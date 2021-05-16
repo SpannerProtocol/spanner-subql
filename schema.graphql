@@ -59,6 +59,18 @@ type Transfer @entity {
   amount: BigInt!
 }
 
+type Dpo @entity {
+  # DpoIndex
+  id: ID!
+  events: String
+}
+
+type TravelCabin @entity {
+  # <TravelCabinIndex>-<TravelCabinInventoryIndex>
+  id: ID!
+  events: String
+}
+
 type Pair @entity {
   # trading pair
   # <token1>-<token2>
