@@ -22,6 +22,8 @@ export class Event implements Entity {
 
     public blockId: string;
 
+    public timestamp: bigint;
+
     public extrinsicId?: string;
 
 
