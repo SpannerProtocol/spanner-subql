@@ -23,6 +23,7 @@ export class EventHandler {
     event.method = this.event.event.method;
     event.data = data.toString();
     event.blockId = blockHash;
+    event.timestamp = timestamp;
     event.extrinsicId = this.event.extrinsic?.extrinsic?.hash?.toString();
     await event.save();
 
@@ -69,8 +70,7 @@ export class EventHandler {
         await DpoHandler.updateDpoEvents(dpo_id.toString(), event.id);
       } else if (
         event.method == 'FareWithdrawnFromTravelCabin' ||
-        event.method == 'YieldWithdrawnFromTravelCabin' ||
-        event.method == 'TreasureHunted'
+        event.method == 'YieldWithdrawnFromTravelCabin'
       ) {
         const tc_id = api.createType('TravelCabinIndex', data[1]);
         const tc_inv_idx = api.createType('TravelCabinBuyerInfo', data[2]);
