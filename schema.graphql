@@ -18,6 +18,7 @@ type Event @entity {
   data: String!
   block: Block!
   extrinsic: Extrinsic
+  timestamp: BigInt!
 }
 
 type Extrinsic @entity {

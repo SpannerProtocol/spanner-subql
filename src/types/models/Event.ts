@@ -22,9 +22,9 @@ export class Event implements Entity {
 
     public blockId: string;
 
-    public timestamp: bigint;
-
     public extrinsicId?: string;
+
+    public timestamp: bigint;
 
 
     async save(): Promise<void>{

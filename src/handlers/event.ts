@@ -75,8 +75,13 @@ export class EventHandler {
         event.method == 'FareWithdrawnFromTravelCabin' ||
         event.method == 'YieldWithdrawnFromTravelCabin'
       ) {
+        let tc_inv_idx: any;
+        if (this.event.block.specVersion < 105) {
+          tc_inv_idx = api.createType('TravelCabinBuyerInfoV1', data[2]);
+        } else {
+          tc_inv_idx = api.createType('TravelCabinBuyerInfo', data[2]);
+        }
         const tc_id = api.createType('TravelCabinIndex', data[1]);
-        const tc_inv_idx = api.createType('TravelCabinBuyerInfo', data[2]);
         const id = `${tc_id}-${tc_inv_idx}`;
         await TravelCabinHandler.updateTravelCabinEvents(id, event.id);
       }

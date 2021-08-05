@@ -9,15 +9,17 @@
     "module": "commonjs",
     "outDir": "dist",
     "target": "es2017",
-    "baseUrl": "src",
     "skipLibCheck": true,
+    "baseUrl": "src",
     "paths": {
-      "@polkadot/api/augment": ["spanner-interfaces/augment-api.ts"],
-      "@polkadot/types/augment": ["spanner-interfaces/augment-types.ts"]
+      "packages/*": ["./api-interfaces/spanner-api/packages/*"],
+      "@polkadot/api/augment": [
+        "./api-interfaces/spanner-api/packages/types/src/interfaces/augment-api.ts"
+      ],
+      "@polkadot/types/augment": [
+        "./api-interfaces/spanner-api/packages/types/src/interfaces/augment-types.ts"
+      ]
     }
   },
-  "include": [
-    "src/**/*",
-    "node_modules/@subql/types/dist/global.d.ts"
-  ]
+  "include": ["src/**/*", "node_modules/@subql/types/dist/global.d.ts"]
 }
