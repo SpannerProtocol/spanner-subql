@@ -1,2 +1,6 @@
-src/spanner-interfaces/*
 src/types/*
+**/build/*
+**/coverage/*
+**/node_modules/*
+**/spanner-api/*
+**/*.test.ts

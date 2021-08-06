@@ -12,8 +12,9 @@
     "baseUrl": "src",
     "skipLibCheck": true,
     "paths": {
-      "@polkadot/api/augment": ["spanner-interfaces/augment-api.ts"],
-      "@polkadot/types/augment": ["spanner-interfaces/augment-types.ts"]
+      "@polkadot/api/augment": ["spanner-api/packages/types/src/interfaces/augment-api.ts"],
+      "@polkadot/types/augment": ["spanner-api/packages/types/src/interfaces/augment-types.ts"],
+      "packages/*": ["spanner-api/packages/*"]
     }
   },
   "include": [
