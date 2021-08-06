@@ -5,7 +5,7 @@ import { AccountHandler } from './account';
 import { dexPairHandler } from './dexPair';
 import { DpoHandler } from './dpo';
 import { TravelCabinHandler } from './travelCabin';
-
+import { DpoIndex } from 'packages/types/src/interfaces';
 export class EventHandler {
   private readonly event: SubstrateEvent;
   constructor(event: SubstrateEvent) {
