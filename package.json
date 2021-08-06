@@ -23,12 +23,9 @@
   ],
   "author": "SpannerProtocol",
   "license": "Apache-2.0",
-  "resolutions": {
-    "**/chalk": "4.1.0"
-  },
   "devDependencies": {
-    "@polkadot/api": "^5.2.1",
-    "@polkadot/typegen": "^5.2.1",
+    "@polkadot/api": "5.2.1",
+    "@polkadot/typegen": "5.2.1",
     "@subql/cli": "latest",
     "@subql/types": "latest",
     "ts-node": "^9.1.1",
