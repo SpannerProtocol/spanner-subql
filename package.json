@@ -38,5 +38,8 @@
     "eslint-config-prettier": "7.2.0",
     "eslint-plugin-prettier": "^3.1.4",
     "prettier": "^2.1.2"
+  },
+  "resolutions": {
+    "@subql/cli/**/ws": "^7.4.6"
   }
 }
