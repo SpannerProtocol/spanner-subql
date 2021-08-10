@@ -49,7 +49,7 @@ export class EventHandler {
           );
         }
       } else if (event.method == 'DpoTargetChanged') {
-        const dpo_id = api.createType('DpoIndex', data[2]);
+        const dpo_id = api.createType('DpoIndex', data[1]);
         await DpoHandler.updateDpoEvents(dpo_id.toString(), event.id);
       } else if (event.method == 'TravelCabinTargetPurchased') {
         const buyer = api.createType('Buyer', data[1]);
