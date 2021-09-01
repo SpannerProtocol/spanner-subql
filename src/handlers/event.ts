@@ -23,6 +23,7 @@ export class EventHandler {
     event.method = this.event.event.method;
     event.data = data.toString();
     event.blockId = blockHash;
+    event.timestamp = timestamp;
     event.extrinsicId = this.event.extrinsic?.extrinsic?.hash?.toString();
     await event.save();
 
@@ -47,6 +48,9 @@ export class EventHandler {
             dpo_id.toString(),
           );
         }
+      } else if (event.method == 'DpoTargetChanged') {
+        const dpo_id = api.createType('DpoIndex', data[1]);
+        await DpoHandler.updateDpoEvents(dpo_id.toString(), event.id);
       } else if (event.method == 'TravelCabinTargetPurchased') {
         const buyer = api.createType('Buyer', data[1]);
         if (buyer.isPassenger) {
@@ -69,11 +73,15 @@ export class EventHandler {
         await DpoHandler.updateDpoEvents(dpo_id.toString(), event.id);
       } else if (
         event.method == 'FareWithdrawnFromTravelCabin' ||
-        event.method == 'YieldWithdrawnFromTravelCabin' ||
-        event.method == 'TreasureHunted'
+        event.method == 'YieldWithdrawnFromTravelCabin'
       ) {
+        let tc_inv_idx: any;
+        if (this.event.block.specVersion < 105) {
+          tc_inv_idx = api.createType('TravelCabinBuyerInfoV1', data[2]);
+        } else {
+          tc_inv_idx = api.createType('TravelCabinBuyerInfo', data[2]);
+        }
         const tc_id = api.createType('TravelCabinIndex', data[1]);
-        const tc_inv_idx = api.createType('TravelCabinBuyerInfo', data[2]);
         const id = `${tc_id}-${tc_inv_idx}`;
         await TravelCabinHandler.updateTravelCabinEvents(id, event.id);
       }

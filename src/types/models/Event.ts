@@ -24,6 +24,8 @@ export class Event implements Entity {
 
     public extrinsicId?: string;
 
+    public timestamp: bigint;
+
 
     async save(): Promise<void>{
         let id = this.id;
