@@ -33,13 +33,15 @@ export class ExtrinsicHandler {
     extrinsic.isSuccess = checkIfExtrinsicExecuteSuccess(this.extrinsic);
     extrinsic.blockId = blockHash;
     await extrinsic.save();
-
     if (extrinsic.isSuccess) {
       //handle account referee
-      if (extrinsic.section == 'bulletTrain') {
-        if (extrinsic.method == 'createDpo') {
+      if (extrinsic.section === 'bulletTrain') {
+        if (extrinsic.method === 'createDpo') {
           await AccountHandler.updateAccountReferee(args[6].toString(), signer);
-        } else if (extrinsic.method == 'passengerBuyDpoSeats') {
+        } else if (
+          extrinsic.method === 'passengerBuyDpoSeats' ||
+          extrinsic.method === 'passengerBuyDpoShare'
+        ) {
           await AccountHandler.updateAccountReferee(args[2].toString(), signer);
         }
       }

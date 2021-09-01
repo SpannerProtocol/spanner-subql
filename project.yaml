@@ -3,9 +3,8 @@ description: ''
 repository: https://github.com/SpannerProtocol/spanner-subql
 schema: ./schema.graphql
 network:
-  endpoint: wss://hammerwss.spannerprotocol.com
-  typesBundle:
-    {
+  endpoint: wss://wss.spannerprotocol.com
+  typesBundle: {
     "spec": {
         "spanner": {
             "rpc": {
@@ -366,7 +365,7 @@ network:
                 {
                     "minmax": [
                         105,
-                        120
+                        999
                     ],
                     "types": {
                         "CallOf": "Call",
@@ -996,7 +995,7 @@ network:
                 {
                     "minmax": [
                         105,
-                        120
+                        999
                     ],
                     "types": {
                         "CallOf": "Call",
